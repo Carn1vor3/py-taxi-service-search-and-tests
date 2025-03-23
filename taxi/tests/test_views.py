@@ -135,15 +135,10 @@ class DriverSearchTest(TestCase):
     def test_driver_list_view_filters_by_username(self):
         url = reverse("taxi:driver-list") + "?username=test"
         response = self.client.get(url)
-
         self.assertEqual(response.status_code, 200)
-
-        soup = BeautifulSoup(response.content, "html.parser")
-        table = soup.find("table")
-
-        self.assertIn("test_driver", table.text)
-        self.assertNotIn("driver1", table.text)
-        self.assertNotIn("another_driver", table.text)
+        self.assertNotContains(response, "driver1")
+        self.assertContains(response, "test_driver")
+        self.assertNotContains(response, "another_driver")
 
     def test_search_form_is_rendered(self):
         url = reverse("taxi:driver-list")
